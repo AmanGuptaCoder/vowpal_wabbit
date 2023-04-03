@@ -9,7 +9,6 @@
 #include "vw/core/learner.h"
 #include "vw/core/memory.h"
 #include "vw/core/parse_primitives.h"
-#include "vw/core/scope_exit.h"
 #include "vw/core/vw.h"
 #include "vw/io/logger.h"
 
@@ -26,6 +25,7 @@ std::unique_ptr<VW::workspace> setup(std::unique_ptr<options_i> options)
 
 int main(int argc, char* argv[])
 {
+  std::cout<<"Hello World"<<std::endl;
   bool should_use_onethread = false;
   std::string log_level;
   std::string log_output_stream;
@@ -105,8 +105,6 @@ int main(int argc, char* argv[])
     else
     {
       VW::start_parser(all);
-      auto scope_guard = VW::scope_exit([&all] { VW::end_parser(all); });
-
       if (alls.size() == 1) { VW::LEARNER::generic_driver(all); }
       else
       {
@@ -115,6 +113,7 @@ int main(int argc, char* argv[])
         for (auto& v : alls) { alls_ptrs.push_back(v.get()); }
         VW::LEARNER::generic_driver(alls_ptrs);
       }
+      VW::end_parser(all);
     }
 
     for (auto& v : alls)
